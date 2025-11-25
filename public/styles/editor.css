@@ -95,7 +95,6 @@
 .ProseMirror ol {
   padding-left: 30px;
 }
-
 .ai-button {
   position: absolute;
   right: 30px;
@@ -114,7 +113,28 @@
 
 .ai-button:hover {
   background: #414345;
-  transform: translateY(-3px);
+  /* transform: translateY(-3px); */
+}
+
+/* NEW — second button (Save) */
+.save-button {
+  position: absolute;
+  right: 30px;
+  bottom: 80px; /* moved upward */
+  background: #4b7bec;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: all 0.25s ease;
+}
+
+.save-button:hover {
+  background: #3867d6;
 }
 
 .editor-wrapper {

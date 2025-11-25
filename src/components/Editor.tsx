@@ -7,6 +7,7 @@ import { addListNodes } from "prosemirror-schema-list";
 import { exampleSetup } from "prosemirror-example-setup";
 import "../../public/styles/editor.css";
 
+import { downloadTextFile } from "../utils/downloadText";
 import { useMachine } from "@xstate/react";
 import { editorMachine } from "../machines/editorMachine";
 
@@ -102,7 +103,7 @@ export function Editor() {
     <div className="editor-page">
       <div className="editor-container">
         <header className="editor-header">
-          <h1>MissMunites Editor</h1>
+          <h1>Miss Minutes Editor</h1>
           <p>Your AI-powered writing workspace</p>
         </header>
 
@@ -116,6 +117,17 @@ export function Editor() {
             {state.matches("generating") || state.matches("inserting")
               ? "⏹ Stop"
               : "✨ Continue Writing"}
+          </button>
+          <button
+            className="save-button"
+            onClick={() => {
+              const content =
+                editorViewRef.current?.state.doc.textContent || "";
+              const fileName = "my_document_" + Date.now() + ".txt";
+              downloadTextFile(fileName, content);
+            }}
+          >
+            💾 Save as TXT
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { setup, fromPromise, assign } from "xstate";
+import { testGeminiAPI } from "../api/geminiApi";
 
 export const editorMachine = setup({
   types: {
@@ -18,9 +19,8 @@ export const editorMachine = setup({
     mockAI: fromPromise<string, { userInput: string }>(async ({ input }) => {
       // You can later replace this with a real API call
       // For now, return a long-ish string so the typing effect is visible
-      return (
-        "AI says: " + input.userInput + "This is a continuation of mock test"
-      );
+      const out = await testGeminiAPI(input.userInput);
+      return out;
     }),
   },
 }).createMachine({

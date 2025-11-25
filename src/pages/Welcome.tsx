@@ -7,6 +7,13 @@ export function Welcome() {
   return (
     <div className="welcome-container">
       <div className="welcome-card">
+        {/* ---- Logo Added Here ---- */}
+        <img
+          src="/miss_minutes.png"
+          alt="Miss Minutes Logo"
+          className="welcome-logo"
+        />
+
         <h1 className="welcome-title">Miss Minutes</h1>
         <p className="welcome-tagline">
           Your personal AI-powered writing assistant.
