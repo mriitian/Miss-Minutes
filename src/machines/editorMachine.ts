@@ -1,27 +1,28 @@
 import { setup, fromPromise, assign } from "xstate";
 
 export const editorMachine = setup({
-  /** Define types here */
   types: {
     context: {} as {
       aiText: string;
     },
 
     events: {} as
-      | { type: "GENERATE" }
+      | { type: "GENERATE"; text: string }
       | { type: "CANCEL" }
       | { type: "INSERTED" },
 
-    // output from invoke
+    // input: {} as { userInput: string },
+
     output: {} as string,
   },
 
-  /** Register actor (invoke source) here */
   actors: {
-    mockAI: fromPromise<string>(async () => {
+    mockAI: fromPromise<string, { userInput: string }>(async ({ input }) => {
+      // TS FIX: assure input exists
       await new Promise((r) => setTimeout(r, 1500));
       console.log("Mock AI finished!");
-      return " This is the AI continuation (mock).";
+
+      return "AI says: " + input.userInput;
     }),
   },
 }).createMachine({
@@ -41,13 +42,20 @@ export const editorMachine = setup({
 
     generating: {
       invoke: {
-        src: "mockAI", // reference the actor by name
+        src: "mockAI",
+
+        // TS FIX: force event to GENERATE event
+        input: ({ event }) => ({
+          userInput: (event as { type: "GENERATE"; text: string }).text,
+        }),
+
         onDone: {
           target: "inserting",
           actions: assign({
-            aiText: ({ event }) => event.output, // FULLY TYPED NOW
+            aiText: ({ event }) => event.output,
           }),
         },
+
         onError: "idle",
       },
 

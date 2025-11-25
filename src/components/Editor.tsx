@@ -101,7 +101,9 @@ export function Editor() {
             className="ai-button"
             onClick={() => {
               if (state.matches("idle")) {
-                send({ type: "GENERATE" });
+                const currentText =
+                  editorViewRef.current?.state.doc.textContent || "";
+                send({ type: "GENERATE", text: currentText });
               } else if (state.matches("generating")) {
                 send({ type: "CANCEL" });
               }
