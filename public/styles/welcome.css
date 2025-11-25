@@ -1,0 +1,64 @@
+/* Overall layout */
+.welcome-container {
+  min-height: 100vh;
+  background: #f4f4f4; /* soft light gray background like editor wrap */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #333;
+  font-family: sans-serif;
+}
+
+/* Card center block */
+.welcome-card {
+  background: white;
+  padding: 50px 60px;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.1); /* same as editor border */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* subtle shadow */
+  text-align: center;
+  max-width: 480px;
+}
+
+/* App title */
+.welcome-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+/* Tagline */
+.welcome-tagline {
+  font-size: 1.2rem;
+  margin-bottom: 35px;
+  opacity: 0.8;
+}
+
+/* Button style – consistent minimal UI */
+.welcome-button {
+  font-size: 1.1rem;
+  padding: 12px 26px;
+  background: #232526; /* matches editor border tone */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease-in-out;
+}
+
+.welcome-button:hover {
+  background: #414345;
+  transform: translateY(-2px);
+}
+
+/* Footer */
+.welcome-footer {
+  margin-top: 40px;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  text-align: center;
+}
