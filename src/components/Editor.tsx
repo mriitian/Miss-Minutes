@@ -32,22 +32,20 @@ export function Editor() {
 
     const maybeDoc = mySchema.topNodeType.createAndFill();
 
-    const state = EditorState.create({
+    const pmState = EditorState.create({
       doc: maybeDoc || undefined,
       plugins: exampleSetup({ schema: mySchema }),
     });
 
-    const view = new EditorView(editorParentRef.current, { state });
-
+    const view = new EditorView(editorParentRef.current, { state: pmState });
     editorViewRef.current = view;
 
-    return () => {
-      view.destroy();
-    };
+    return () => view.destroy();
   }, []);
 
   /** ----------------------------------------
    *  INSERT AI TEXT WHEN MACHINE ENTERS "inserting"
+   *  (typing animation, char-by-char)
    * ---------------------------------------- */
   useEffect(() => {
     if (!state.matches("inserting")) return;
@@ -59,29 +57,46 @@ export function Editor() {
     let index = 0;
 
     const interval = setInterval(() => {
-      // Insert next character
       const nextChar = fullText[index];
 
       if (nextChar) {
-        const tr = view.state.tr.insertText(
-          nextChar,
-          view.state.selection.from,
-          view.state.selection.to
-        );
+        // Ensure the editor has focus so selection is valid
+        if (!view.hasFocus()) {
+          view.focus();
+        }
+
+        const { from, to } = view.state.selection;
+
+        const tr = view.state.tr.insertText(nextChar, from, to);
         view.dispatch(tr);
 
         index++;
       }
 
-      // Done typing
+      // When we've finished inserting all characters
       if (index >= fullText.length) {
         clearInterval(interval);
         send({ type: "INSERTED" });
       }
     }, 35); // typing speed (ms between characters)
 
+    // Cleanup if component unmounts or state changes (e.g. CANCEL)
     return () => clearInterval(interval);
   }, [state, send]);
+
+  /** ----------------------------------------
+   *  Button handler: GENERATE or CANCEL
+   * ---------------------------------------- */
+  const handleAiClick = () => {
+    if (state.matches("idle")) {
+      // Start AI generation
+      const currentText = editorViewRef.current?.state.doc.textContent || "";
+      send({ type: "GENERATE", text: currentText });
+    } else if (state.matches("generating") || state.matches("inserting")) {
+      // Stop AI generation/typing
+      send({ type: "CANCEL" });
+    }
+  };
 
   return (
     <div className="editor-page">
@@ -97,19 +112,10 @@ export function Editor() {
           </div>
 
           {/* --- AI Floating Button --- */}
-          <button
-            className="ai-button"
-            onClick={() => {
-              if (state.matches("idle")) {
-                const currentText =
-                  editorViewRef.current?.state.doc.textContent || "";
-                send({ type: "GENERATE", text: currentText });
-              } else if (state.matches("generating")) {
-                send({ type: "CANCEL" });
-              }
-            }}
-          >
-            {state.matches("generating") ? "⏳ Cancel" : "✨ Continue Writing"}
+          <button className="ai-button" onClick={handleAiClick}>
+            {state.matches("generating") || state.matches("inserting")
+              ? "⏹ Stop"
+              : "✨ Continue Writing"}
           </button>
         </div>
       </div>

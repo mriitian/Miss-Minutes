@@ -5,24 +5,22 @@ export const editorMachine = setup({
     context: {} as {
       aiText: string;
     },
-
     events: {} as
       | { type: "GENERATE"; text: string }
       | { type: "CANCEL" }
       | { type: "INSERTED" },
-
-    // input: {} as { userInput: string },
-
+    // This is the type of the value returned by mockAI
     output: {} as string,
   },
 
   actors: {
+    // Simple mock AI: returns the full continuation string
     mockAI: fromPromise<string, { userInput: string }>(async ({ input }) => {
-      // TS FIX: assure input exists
-      await new Promise((r) => setTimeout(r, 1500));
-      console.log("Mock AI finished!");
-
-      return "AI says: " + input.userInput;
+      // You can later replace this with a real API call
+      // For now, return a long-ish string so the typing effect is visible
+      return (
+        "AI says: " + input.userInput + "This is a continuation of mock test"
+      );
     }),
   },
 }).createMachine({
@@ -34,39 +32,38 @@ export const editorMachine = setup({
   },
 
   states: {
+    /** ------------------ idle ------------------ */
     idle: {
       on: {
         GENERATE: "generating",
       },
     },
 
+    /** ------------------ generating ------------------ */
     generating: {
       invoke: {
         src: "mockAI",
-
-        // TS FIX: force event to GENERATE event
         input: ({ event }) => ({
           userInput: (event as { type: "GENERATE"; text: string }).text,
         }),
-
         onDone: {
           target: "inserting",
           actions: assign({
             aiText: ({ event }) => event.output,
           }),
         },
-
         onError: "idle",
       },
-
       on: {
         CANCEL: "idle",
       },
     },
 
+    /** ------------------ inserting (typing animation) ------------------ */
     inserting: {
       on: {
         INSERTED: "idle",
+        CANCEL: "idle",
       },
     },
   },
