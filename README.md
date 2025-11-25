@@ -1,6 +1,6 @@
 # 📘 Miss Minutes – AI-Powered Writing Assistant
 
-A lightweight, beautiful, and responsive AI-assisted text editor built using **React**, **TypeScript**, **XState**, **ProseMirror**, and **Google Gemini**.  
+A lightweight, beautiful, and AI-assisted text editor built using **React**, **TypeScript**, **XState**, **ProseMirror**, and **Google Gemini**.  
 Created as part of the **Chronicle Frontend Engineering Assignment**.
 
 ---
