@@ -1,14 +1,16 @@
 .editor-page {
   background: #f4f4f7;
   min-height: calc(100vh - 80px);
-  padding: 40px 0;
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
 }
-
+.editor-layout {
+  display: flex;
+}
 /* Scrollable container */
 .editor-scroll-container {
-  max-height: 50vh; /* adjust to your UI */
+  max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -36,7 +38,7 @@
 .editor-container {
   width: 100%;
   max-width: 900px;
-  padding: 0 20px;
+  padding: 40px 20px;
 }
 
 .editor-header {
@@ -72,7 +74,6 @@
   outline: none;
 }
 
-/* Optional: make editor look more like Notion */
 .ProseMirror {
   outline: none;
   font-family: "Inter", sans-serif;
@@ -116,11 +117,10 @@
   /* transform: translateY(-3px); */
 }
 
-/* NEW — second button (Save) */
 .save-button {
   position: absolute;
   right: 30px;
-  bottom: 80px; /* moved upward */
+  bottom: 80px;
   background: #4b7bec;
   color: white;
   padding: 10px 20px;
@@ -138,5 +138,5 @@
 }
 
 .editor-wrapper {
-  position: relative; /* Needed so button stays inside the card */
+  position: relative;
 }

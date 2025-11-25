@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
+import { Slice, Fragment } from "prosemirror-model";
+
 import { schema } from "prosemirror-schema-basic";
 import { addListNodes } from "prosemirror-schema-list";
 import { exampleSetup } from "prosemirror-example-setup";
@@ -10,6 +12,8 @@ import "../../public/styles/editor.css";
 import { downloadTextFile } from "../utils/downloadText";
 import { useMachine } from "@xstate/react";
 import { editorMachine } from "../machines/editorMachine";
+
+import { Sidebar } from "./Sidebar";
 
 import "prosemirror-view/style/prosemirror.css";
 
@@ -20,9 +24,6 @@ export function Editor() {
   const [state, send] = useMachine(editorMachine);
   console.log("Editor Machine State:", state.value);
 
-  /** ----------------------------------------
-   *  Initialize ProseMirror
-   * ---------------------------------------- */
   useEffect(() => {
     if (!editorParentRef.current) return;
 
@@ -44,10 +45,6 @@ export function Editor() {
     return () => view.destroy();
   }, []);
 
-  /** ----------------------------------------
-   *  INSERT AI TEXT WHEN MACHINE ENTERS "inserting"
-   *  (typing animation, char-by-char)
-   * ---------------------------------------- */
   useEffect(() => {
     if (!state.matches("inserting")) return;
     if (!editorViewRef.current) return;
@@ -61,46 +58,54 @@ export function Editor() {
       const nextChar = fullText[index];
 
       if (nextChar) {
-        // Ensure the editor has focus so selection is valid
-        if (!view.hasFocus()) {
-          view.focus();
-        }
+        if (!view.hasFocus()) view.focus();
 
         const { from, to } = view.state.selection;
-
         const tr = view.state.tr.insertText(nextChar, from, to);
         view.dispatch(tr);
 
         index++;
       }
 
-      // When we've finished inserting all characters
       if (index >= fullText.length) {
         clearInterval(interval);
         send({ type: "INSERTED" });
       }
-    }, 35); // typing speed (ms between characters)
+    }, 35);
 
-    // Cleanup if component unmounts or state changes (e.g. CANCEL)
     return () => clearInterval(interval);
   }, [state, send]);
 
-  /** ----------------------------------------
-   *  Button handler: GENERATE or CANCEL
-   * ---------------------------------------- */
   const handleAiClick = () => {
     if (state.matches("idle")) {
-      // Start AI generation
       const currentText = editorViewRef.current?.state.doc.textContent || "";
       send({ type: "GENERATE", text: currentText });
     } else if (state.matches("generating") || state.matches("inserting")) {
-      // Stop AI generation/typing
       send({ type: "CANCEL" });
     }
   };
 
+  const loadDocument = (content: string) => {
+    if (!editorViewRef.current) return;
+
+    const view = editorViewRef.current;
+    const state = view.state;
+
+    const textNode = state.schema.text(content);
+
+    const slice = new Slice(Fragment.from(textNode), 0, 0);
+
+    const tr = state.tr.replaceRange(0, state.doc.content.size, slice);
+
+    view.dispatch(tr);
+  };
+
   return (
-    <div className="editor-page">
+    <div className="editor-layout">
+      {/* ------------ LEFT SIDEBAR ------------ */}
+      <Sidebar onSelect={loadDocument} />
+
+      {/* ------------ MAIN EDITOR AREA ------------ */}
       <div className="editor-container">
         <header className="editor-header">
           <h1>Miss Minutes Editor</h1>
@@ -112,19 +117,33 @@ export function Editor() {
             <div ref={editorParentRef} className="editor-surface" />
           </div>
 
-          {/* --- AI Floating Button --- */}
+          {/* --- AI Button --- */}
           <button className="ai-button" onClick={handleAiClick}>
             {state.matches("generating") || state.matches("inserting")
               ? "⏹ Stop"
               : "✨ Continue Writing"}
           </button>
+
+          {/* --- SAVE BUTTON --- */}
           <button
             className="save-button"
             onClick={() => {
               const content =
                 editorViewRef.current?.state.doc.textContent || "";
-              const fileName = "my_document_" + Date.now() + ".txt";
-              downloadTextFile(fileName, content);
+              const fileName = "Document " + new Date().toLocaleString();
+
+              const doc = {
+                id: Date.now().toString(),
+                name: fileName,
+                content,
+              };
+
+              const existing = localStorage.getItem("mm_saved_docs");
+              const arr = existing ? JSON.parse(existing) : [];
+              arr.push(doc);
+              localStorage.setItem("mm_saved_docs", JSON.stringify(arr));
+
+              downloadTextFile(fileName + ".txt", content);
             }}
           >
             💾 Save as TXT

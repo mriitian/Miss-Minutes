@@ -17,10 +17,9 @@ export const editorMachine = setup({
   actors: {
     // Simple mock AI: returns the full continuation string
     mockAI: fromPromise<string, { userInput: string }>(async ({ input }) => {
-      // You can later replace this with a real API call
-      // For now, return a long-ish string so the typing effect is visible
       const out = await testGeminiAPI(input.userInput);
       return out;
+      // return "This is mock text, AI says: " + input.userInput;
     }),
   },
 }).createMachine({

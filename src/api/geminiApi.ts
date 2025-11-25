@@ -1,18 +1,16 @@
 export async function testGeminiAPI(prompt: string) {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-  console.log("🔑 API Key loaded:", apiKey ? "YES" : "NO");
+  // console.log("🔑 API Key loaded:", apiKey ? "YES" : "NO");
 
   if (!apiKey) {
     throw new Error("❌ Missing Gemini API Key (VITE_GEMINI_API_KEY)");
   }
 
-  // Correct Gemini endpoint
   const url =
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
     apiKey;
 
-  // Build the prompt — SAFE for Gemini (no system role)
   const body = {
     contents: [
       {
@@ -43,7 +41,7 @@ ${prompt}
       headers: {
         "Content-Type": "application/json",
 
-        // IMPORTANT: Required for some deployments
+        // Required for some deployments
         "X-Goog-Api-Key": apiKey,
       },
       body: JSON.stringify(body),

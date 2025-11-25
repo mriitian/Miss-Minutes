@@ -7,7 +7,6 @@ export function Welcome() {
   return (
     <div className="welcome-container">
       <div className="welcome-card">
-        {/* ---- Logo Added Here ---- */}
         <img
           src="/miss_minutes.png"
           alt="Miss Minutes Logo"
