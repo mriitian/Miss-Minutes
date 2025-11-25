@@ -1,6 +1,6 @@
 .editor-page {
   background: #f4f4f7;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   padding: 40px 0;
   display: flex;
   justify-content: center;
