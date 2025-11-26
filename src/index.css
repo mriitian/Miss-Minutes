@@ -11,3 +11,53 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* Global Dark Mode */
+body.dark {
+  background: #1e1e1e;
+  color: #e2e2e2;
+}
+
+/* Card & Containers */
+body.dark .editor-wrapper,
+body.dark .welcome-card,
+body.dark .sidebar {
+  background: #242424 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e2e2e2;
+}
+
+/* Editor Text */
+body.dark .editor-surface {
+  color: #000;
+}
+
+/* Sidebar List Items */
+body.dark .sidebar-card {
+  background: #2c2c2c !important;
+}
+body.dark .sidebar-card:hover {
+  background: #333 !important;
+}
+
+/* Buttons */
+body.dark .ai-button,
+body.dark .save-button,
+body.dark .welcome-button,
+body.dark .darkmode-toggle {
+  background: #333 !important;
+  color: #fff !important;
+}
+
+.darkmode-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #232526;
+  color: white;
+  border: none;
+  font-size: 0.9rem;
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+// import { useState } from "react";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
@@ -16,12 +17,16 @@ import { editorMachine } from "../machines/editorMachine";
 import { Sidebar } from "./Sidebar";
 
 import "prosemirror-view/style/prosemirror.css";
+import { DarkModeToggle } from "./DarkMode";
+// import EmojiPicker from "emoji-picker-react";
 
 export function Editor() {
   const editorParentRef = useRef<HTMLDivElement>(null);
   const editorViewRef = useRef<EditorView | null>(null);
 
   const [state, send] = useMachine(editorMachine);
+  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   console.log("Editor Machine State:", state.value);
 
   useEffect(() => {
@@ -100,8 +105,20 @@ export function Editor() {
     view.dispatch(tr);
   };
 
+  // const insertEmoji = (emoji: string) => {
+  //   if (!editorViewRef.current) return;
+
+  //   const view = editorViewRef.current;
+  //   const { from, to } = view.state.selection;
+
+  //   const tr = view.state.tr.insertText(emoji, from, to);
+  //   view.dispatch(tr);
+  //   view.focus();
+  // };
+
   return (
     <div className="editor-layout">
+      <DarkModeToggle />
       {/* ------------ LEFT SIDEBAR ------------ */}
       <Sidebar onSelect={loadDocument} />
 
@@ -148,6 +165,25 @@ export function Editor() {
           >
             💾 Save as TXT
           </button>
+          {/* --- EMOJI BUTTON --- */}
+          {/* <button
+            className="emoji-button"
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+          >
+            😊
+          </button> */}
+
+          {/* --- POPUP EMOJI PICKER --- */}
+          {/* {showEmojiPicker && (
+            <div className="emoji-picker-popup">
+              <EmojiPicker
+                onEmojiClick={(emojiObj) => {
+                  insertEmoji(emojiObj.emoji);
+                  setShowEmojiPicker(false); // auto close after picking
+                }}
+              />
+            </div>
+          )} */}
         </div>
       </div>
     </div>
