@@ -38,7 +38,7 @@
 .editor-container {
   width: 100%;
   max-width: 900px;
-  padding: 40px 20px;
+  padding: 90px 20px;
 }
 
 .editor-header {
@@ -182,4 +182,19 @@
 .emoji-picker-react {
   width: 100% !important;
   max-height: 300px;
+}
+
+/* --- Hamburger Button --- */
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1500;
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  font-size: 1.4rem;
+  border-radius: 6px;
 }

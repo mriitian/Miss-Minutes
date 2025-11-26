@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-// import { useState } from "react";
+import { useState } from "react";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
@@ -26,6 +26,7 @@ export function Editor() {
 
   const [state, send] = useMachine(editorMachine);
   // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   console.log("Editor Machine State:", state.value);
 
@@ -120,10 +121,31 @@ export function Editor() {
     <div className="editor-layout">
       <DarkModeToggle />
       {/* ------------ LEFT SIDEBAR ------------ */}
-      <Sidebar onSelect={loadDocument} />
+      {/* Responsive Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onSelect={loadDocument}
+      />
+
+      {/* Sidebar overlay on small screen devices */}
+      {isSidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
 
       {/* ------------ MAIN EDITOR AREA ------------ */}
       <div className="editor-container">
+        {/* Hamburger Menu */}
+        <button
+          className="hamburger-btn"
+          onClick={() => setIsSidebarOpen(true)}
+        >
+          ☰
+        </button>
+
         <header className="editor-header">
           <h1>Miss Minutes Editor</h1>
           <p>Your AI-powered writing workspace</p>

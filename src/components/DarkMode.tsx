@@ -13,7 +13,8 @@ export function DarkModeToggle() {
 
   return (
     <button onClick={() => setDark(!dark)} className="darkmode-toggle">
-      {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      {dark ? "☀️" : "🌙"}
+      <span className="dm-text">{dark ? "Light Mode" : "Dark Mode"}</span>
     </button>
   );
 }
