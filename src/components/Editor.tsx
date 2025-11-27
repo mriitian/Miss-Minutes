@@ -15,7 +15,7 @@ import { useMachine } from "@xstate/react";
 import { editorMachine } from "../machines/editorMachine";
 
 import { Sidebar } from "./Sidebar";
-
+import { TypingDots } from "./TypingDots";
 import "prosemirror-view/style/prosemirror.css";
 import { DarkModeToggle } from "./DarkMode";
 // import EmojiPicker from "emoji-picker-react";
@@ -23,7 +23,6 @@ import { DarkModeToggle } from "./DarkMode";
 export function Editor() {
   const editorParentRef = useRef<HTMLDivElement>(null);
   const editorViewRef = useRef<EditorView | null>(null);
-
   const [state, send] = useMachine(editorMachine);
   // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -56,6 +55,7 @@ export function Editor() {
     if (!editorViewRef.current) return;
 
     const view = editorViewRef.current;
+
     const fullText = state.context.aiText;
 
     let index = 0;
@@ -104,6 +104,26 @@ export function Editor() {
     const tr = state.tr.replaceRange(0, state.doc.content.size, slice);
 
     view.dispatch(tr);
+  };
+
+  const clearEditor = () => {
+    if (!editorViewRef.current) return;
+
+    const view = editorViewRef.current;
+    const state = view.state;
+
+    // Create an empty paragraph node
+    const emptyNode = state.schema.topNodeType.createAndFill();
+
+    // Replace whole doc with emptyNode
+    const tr = state.tr.replaceRange(
+      0,
+      state.doc.content.size,
+      new Slice(emptyNode!.content, 0, 0)
+    );
+
+    view.dispatch(tr);
+    view.focus();
   };
 
   // const insertEmoji = (emoji: string) => {
@@ -155,12 +175,43 @@ export function Editor() {
           <div className="editor-scroll-container">
             <div ref={editorParentRef} className="editor-surface" />
           </div>
+          {/* Loading animation while waiting for AI */}
+          {state.matches("generating") && (
+            <div className="ai-loading">
+              <TypingDots />
+            </div>
+          )}
 
+          {/* --- EMOJI BUTTON --- */}
+          {/* <button
+            className="emoji-button"
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+          >
+            😊
+          </button> */}
+
+          {/* --- POPUP EMOJI PICKER --- */}
+          {/* {showEmojiPicker && (
+            <div className="emoji-picker-popup">
+              <EmojiPicker
+                onEmojiClick={(emojiObj) => {
+                  insertEmoji(emojiObj.emoji);
+                  setShowEmojiPicker(false); // auto close after picking
+                }}
+              />
+            </div>
+          )} */}
+        </div>
+        <div className="editor-button-bar">
           {/* --- AI Button --- */}
           <button className="ai-button" onClick={handleAiClick}>
-            {state.matches("generating") || state.matches("inserting")
-              ? "⏹ Stop"
-              : "✨ Continue Writing"}
+            {state.matches("generating") || state.matches("inserting") ? (
+              <span className="ai-stop-with-dots">
+                ⏹ Stop <TypingDots />
+              </span>
+            ) : (
+              "✨ Continue Writing"
+            )}
           </button>
 
           {/* --- SAVE BUTTON --- */}
@@ -187,25 +238,11 @@ export function Editor() {
           >
             💾 Save as TXT
           </button>
-          {/* --- EMOJI BUTTON --- */}
-          {/* <button
-            className="emoji-button"
-            onClick={() => setShowEmojiPicker((prev) => !prev)}
-          >
-            😊
-          </button> */}
 
-          {/* --- POPUP EMOJI PICKER --- */}
-          {/* {showEmojiPicker && (
-            <div className="emoji-picker-popup">
-              <EmojiPicker
-                onEmojiClick={(emojiObj) => {
-                  insertEmoji(emojiObj.emoji);
-                  setShowEmojiPicker(false); // auto close after picking
-                }}
-              />
-            </div>
-          )} */}
+          {/* --- CLEAR BUTTON --- */}
+          <button className="clear-button" onClick={clearEditor}>
+            🧹 Clear Text
+          </button>
         </div>
       </div>
     </div>

@@ -43,11 +43,13 @@ body.dark .sidebar-card:hover {
 /* Buttons */
 body.dark .ai-button,
 body.dark .save-button,
+body.dark .clear-button,
 body.dark .welcome-button,
 body.dark .darkmode-toggle {
   background: #333 !important;
   color: #fff !important;
 }
+
 .darkmode-toggle {
   position: absolute;
   top: 20px;
@@ -64,13 +66,12 @@ body.dark .darkmode-toggle {
   align-items: center;
 }
 
-/* ⭐ Hide text on small screens */
 @media (max-width: 900px) {
   .darkmode-toggle .dm-text {
     display: none;
   }
 
   .darkmode-toggle {
-    padding: 8px 10px; /* smaller size */
+    padding: 8px 10px;
   }
 }

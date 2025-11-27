@@ -82,8 +82,8 @@
 }
 
 .sidebar-list {
-  flex: 1; /* 👈 Fill remaining space */
-  overflow-y: auto; /* 👈 Make ONLY this scroll */
+  flex: 1;
+  overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;

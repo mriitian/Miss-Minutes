@@ -38,7 +38,7 @@
 .editor-container {
   width: 100%;
   max-width: 900px;
-  padding: 90px 20px;
+  padding: 90px 20px 0px 20px;
 }
 
 .editor-header {
@@ -95,7 +95,7 @@
 .ProseMirror ol {
   padding-left: 30px;
 }
-.ai-button {
+/* .ai-button {
   position: absolute;
   right: 30px;
   bottom: 30px;
@@ -109,14 +109,14 @@
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   transition: all 0.25s ease;
-}
+} */
 
 .ai-button:hover {
   background: #414345;
   /* transform: translateY(-3px); */
 }
 
-.save-button {
+/* .save-button {
   position: absolute;
   right: 30px;
   bottom: 80px;
@@ -130,7 +130,7 @@
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   transition: all 0.25s ease;
-}
+} */
 
 .save-button:hover {
   background: #3867d6;
@@ -197,4 +197,106 @@
   padding: 10px 14px;
   font-size: 1.4rem;
   border-radius: 6px;
+}
+
+.ai-loading {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.typing-dots {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #555;
+  padding: 10px;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ai-stop-with-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+}
+
+.ai-stop-with-dots .typing-dots {
+  padding: 0%;
+  margin-top: 0;
+}
+
+/* .clear-button {
+  position: absolute;
+  right: 30px;
+  bottom: 130px;
+  background: #eb3b5a;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: all 0.25s ease;
+} */
+
+.clear-button:hover {
+  background: #fa163f;
+}
+
+.editor-button-bar {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.editor-button-bar button {
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: 0.25s ease;
+}
+
+/* Individual colors */
+.ai-button {
+  background: #232526;
+  color: white;
+}
+.ai-button:hover {
+  background: #414345;
+}
+
+.save-button {
+  background: #4b7bec;
+  color: white;
+}
+.save-button:hover {
+  background: #3867d6;
+}
+
+.clear-button {
+  background: #eb3b5a;
+  color: white;
+}
+.clear-button:hover {
+  background: #fa163f;
 }
